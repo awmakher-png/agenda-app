@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agenda de Demandas</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="header-content">
+        <h1>Agenda</h1>
+        <p class="subtitle">Suas demandas organizadas por urgência e prazo</p>
+      </div>
+      <button class="btn btn-primary" id="btn-nova-tarefa" aria-label="Nova demanda">+ Nova demanda</button>
+    </header>
+
+    <section class="list-section">
+      <div class="table-container">
+        <table class="task-table">
+          <thead>
+            <tr>
+              <th class="col-status">Status</th>
+              <th class="col-tarefa">Tarefa</th>
+              <th class="col-prazo">Prazo</th>
+              <th class="col-urgencia">Urgência</th>
+              <th class="col-acoes">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-tarefas"></tbody>
+        </table>
+        <div id="empty-state" class="empty-state">Nenhuma demanda cadastrada.</div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Modal / Painel de edição (estilo Notion) -->
+  <div class="modal-overlay" id="modal-overlay" aria-hidden="true">
+    <div class="modal" id="modal">
+      <div class="modal-header">
+        <h2 id="modal-titulo">Nova Demanda</h2>
+        <button class="btn-close" id="btn-fechar-modal" aria-label="Fechar">×</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-tarefa">
+          <input type="hidden" id="tarefa-id">
+
+          <div class="form-group">
+            <label for="tarefa-titulo">Título <span class="required">*</span></label>
+            <input type="text" id="tarefa-titulo" name="titulo" maxlength="120" required placeholder="Ex: Entregar relatório mensal">
+          </div>
+
+          <div class="form-group">
+            <label for="tarefa-descricao">Descrição</label>
+            <textarea id="tarefa-descricao" name="descricao" rows="3" placeholder="Detalhes adicionais..."></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="tarefa-prazo">Prazo (data e hora)</label>
+              <input type="datetime-local" id="tarefa-prazo" name="prazo" required>
+            </div>
+            <div class="form-group">
+              <label for="tarefa-urgencia">Urgência <span class="required">*</span></label>
+              <select id="tarefa-urgencia" name="urgencia" required>
+                <option value="">Selecione</option>
+                <option value="Baixa">Baixa</option>
+                <option value="Média">Média</option>
+                <option value="Alta">Alta</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" id="btn-cancelar">Cancelar</button>
+        <button type="button" class="btn btn-danger" id="btn-excluir" style="display:none;">Excluir tarefa</button>
+        <button type="submit" class="btn btn-primary" form="form-tarefa">Salvar alterações</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
