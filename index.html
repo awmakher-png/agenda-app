@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Agenda de Demandas</title>
+  <title>Agenda de Demandas e Clientes</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,31 +11,153 @@
     <header class="header">
       <div class="header-content">
         <h1>Agenda</h1>
-        <p class="subtitle">Suas demandas organizadas por urgência e prazo</p>
+        <p class="subtitle">Demandas e controle diário de clientes</p>
       </div>
-      <button class="btn btn-primary" id="btn-nova-tarefa" aria-label="Nova demanda">+ Nova demanda</button>
+
+      <div class="header-actions">
+        <label class="theme-toggle" aria-label="Alternar tema">
+          <input type="checkbox" id="theme-toggle">
+          <span class="theme-slider"></span>
+        </label>
+        <button class="btn btn-primary" id="btn-nova-tarefa" aria-label="Nova demanda">+ Nova demanda</button>
+      </div>
     </header>
 
-    <section class="list-section">
+    <!-- Abas de navegação -->
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="demandas">Demandas</button>
+      <button class="tab-btn" data-tab="clientes">Clientes</button>
+    </nav>
+
+    <!-- Estatísticas rápidas (apenas na aba Demandas) -->
+    <div class="stats-header" id="stats-demanda">
+      <div class="stat-card">
+        <h3>Pendentes</h3>
+        <div class="valor" id="stat-pendentes">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Vencidas</h3>
+        <div class="valor" id="stat-vencidas" style="color: var(--urgencia-alta);">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Urgência Alta</h3>
+        <div class="valor" id="stat-altas" style="color: var(--urgencia-alta);">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Concluídas</h3>
+        <div class="valor" id="stat-concluidas" style="color: var(--success);">0</div>
+      </div>
+    </div>
+
+    <!-- ============ ABA: DEMANDAS ============ -->
+    <section id="tab-demanda" class="tab-content active">
+      <!-- Filtros Demandas -->
+      <div class="filter-bar">
+        <div class="filter-group">
+          <label class="filter-label">Buscar</label>
+          <input type="text" id="filtro-busca-demanda" placeholder="Título ou descrição...">
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Curso</label>
+          <select id="filtro-curso">
+            <option value="">Todos os cursos</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Urgência</label>
+          <select id="filtro-urgencia">
+            <option value="">Todas</option>
+            <option value="Alta">Alta</option>
+            <option value="Média">Média</option>
+            <option value="Baixa">Baixa</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Status</label>
+          <select id="filtro-status">
+            <option value="">Todos</option>
+            <option value="pendente">Pendentes</option>
+            <option value="concluida">Concluídas</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Prazo até</label>
+          <input type="date" id="filtro-prazo">
+        </div>
+        <button class="btn btn-outline btn-sm" id="btn-limpar-filtro-demanda">Limpar filtros</button>
+      </div>
+
+      <section class="list-section">
+        <div class="table-container">
+          <table class="task-table">
+            <thead>
+              <tr>
+                <th class="col-status">Status</th>
+                <th class="col-tarefa">Tarefa</th>
+                <th class="col-curso">Curso</th>
+                <th class="col-prazo">Prazo</th>
+                <th class="col-urgencia">Urgência</th>
+                <th class="col-acoes">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-tarefas"></tbody>
+          </table>
+          <div id="empty-state" class="empty-state">Nenhuma demanda encontrada.</div>
+        </div>
+      </section>
+    </section>
+
+    <!-- ============ ABA: CLIENTES ============ -->
+    <section id="tab-clientes" class="tab-content">
+      <div class="clientes-header">
+        <h2>Controle de Clientes</h2>
+        <button class="btn btn-primary" id="btn-novo-cliente" aria-label="Novo cliente">+ Novo cliente</button>
+      </div>
+
+      <!-- Filtros Clientes -->
+      <div class="filter-bar">
+        <div class="filter-group">
+          <label class="filter-label">Buscar</label>
+          <input type="text" id="filtro-busca-cliente" placeholder="Nome ou contato...">
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Checklist hoje</label>
+          <select id="filtro-checklist-cliente">
+            <option value="">Todos</option>
+            <option value="comunicacao">Pendentes: Comunicação</option>
+            <option value="saldo">Pendentes: Saldo</option>
+            <option value="conta">Pendentes: Conta</option>
+            <option value="todos-feitos">Todos feitos hoje</option>
+          </select>
+        </div>
+        <button class="btn btn-outline btn-sm" id="btn-limpar-filtro-cliente">Limpar filtros</button>
+      </div>
+
       <div class="table-container">
-        <table class="task-table">
+        <table class="client-table">
           <thead>
             <tr>
-              <th class="col-status">Status</th>
-              <th class="col-tarefa">Tarefa</th>
-              <th class="col-prazo">Prazo</th>
-              <th class="col-urgencia">Urgência</th>
+              <th class="col-cliente">Cliente</th>
+              <th class="col-contato">Contato</th>
+              <th class="col-saldo">Saldo</th>
+              <th class="col-conta">Conta</th>
+              <th class="col-ultima">Última comun.</th>
+              <th class="col-checklist">Checklist de hoje</th>
               <th class="col-acoes">Ações</th>
             </tr>
           </thead>
-          <tbody id="tbody-tarefas"></tbody>
+          <tbody id="tbody-clientes"></tbody>
         </table>
-        <div id="empty-state" class="empty-state">Nenhuma demanda cadastrada.</div>
+        <div id="empty-clientes" class="empty-state">Nenhum cliente encontrado.</div>
+      </div>
+
+      <div class="checklist-legenda">
+        <p><strong>Checklist diário:</strong> marque os itens concluídos hoje. A marcação é por data — se abrir o app em outro dia, os checks começam vazios novamente.</p>
       </div>
     </section>
   </div>
 
-  <!-- Modal / Painel de edição (estilo Notion) -->
+  <!-- Modal / Painel de edição (Demandas) -->
   <div class="modal-overlay" id="modal-overlay" aria-hidden="true">
     <div class="modal" id="modal">
       <div class="modal-header">
@@ -49,6 +171,11 @@
           <div class="form-group">
             <label for="tarefa-titulo">Título <span class="required">*</span></label>
             <input type="text" id="tarefa-titulo" name="titulo" maxlength="120" required placeholder="Ex: Entregar relatório mensal">
+          </div>
+
+          <div class="form-group">
+            <label for="tarefa-curso">Curso</label>
+            <input type="text" id="tarefa-curso" name="curso" maxlength="60" placeholder="Ex: Administração">
           </div>
 
           <div class="form-group">
@@ -77,6 +204,47 @@
         <button type="button" class="btn btn-outline" id="btn-cancelar">Cancelar</button>
         <button type="button" class="btn btn-danger" id="btn-excluir" style="display:none;">Excluir tarefa</button>
         <button type="submit" class="btn btn-primary" form="form-tarefa">Salvar alterações</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de cliente (Novo / Editar) -->
+  <div class="modal-overlay" id="modal-cliente-overlay" aria-hidden="true">
+    <div class="modal" id="modal-cliente">
+      <div class="modal-header">
+        <h2 id="modal-cliente-titulo">Novo Cliente</h2>
+        <button class="btn-close" id="btn-fechar-modal-cliente" aria-label="Fechar">×</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-cliente">
+          <input type="hidden" id="cliente-id">
+
+          <div class="form-group">
+            <label for="cliente-nome">Nome do cliente <span class="required">*</span></label>
+            <input type="text" id="cliente-nome" name="nome" maxlength="120" required placeholder="Ex: João Silva">
+          </div>
+
+          <div class="form-group">
+            <label for="cliente-contato">Contato (WhatsApp / Telefone)</label>
+            <input type="tel" id="cliente-contato" name="contato" maxlength="30" placeholder="Ex: (11) 99999-9999">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="cliente-saldo">Saldo (R$)</label>
+              <input type="number" id="cliente-saldo" name="saldo" step="0.01" min="0" placeholder="0,00">
+            </div>
+            <div class="form-group">
+              <label for="cliente-conta">Conta / Descrição</label>
+              <input type="text" id="cliente-conta" name="conta" maxlength="60" placeholder="Ex: Conta corrente 12345">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" id="btn-cancelar-cliente">Cancelar</button>
+        <button type="button" class="btn btn-danger" id="btn-excluir-cliente" style="display:none;">Excluir cliente</button>
+        <button type="submit" class="btn btn-primary" form="form-cliente">Salvar cliente</button>
       </div>
     </div>
   </div>
